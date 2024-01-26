@@ -8,6 +8,8 @@ import (
 type Repository interface {
 	GetStudent(ctx context.Context, id string) (*model.Student, error)
 	SetStudent(ctx context.Context, student *model.Student) error
+	GetTest(ctx context.Context, id string) (*model.Test, error)
+	SetTest(ctx context.Context, test *model.Test) error
 }
 
 var impl Repository
@@ -22,4 +24,12 @@ func GetStudent(ctx context.Context, id string) (*model.Student, error) {
 
 func SetStudent(ctx context.Context, student *model.Student) error {
 	return impl.SetStudent(ctx, student)
+}
+
+func GetTest(ctx context.Context, id string) (*model.Test, error) {
+	return impl.GetTest(ctx, id)
+}
+
+func SetTest(ctx context.Context, test *model.Test) error {
+	return impl.SetTest(ctx, test)
 }

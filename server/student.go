@@ -25,7 +25,7 @@ func (s *Server) GetStudent(ctx context.Context, req *studentpb.GetStudentReques
 	}
 
 	return &studentpb.Student{
-		Id:   student.Name,
+		Id:   student.Id,
 		Name: student.Name,
 		Age:  student.Age,
 	}, nil
