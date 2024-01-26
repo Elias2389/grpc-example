@@ -2,12 +2,12 @@ syntax = "proto3";
 
 package student;
 
-option go_package = "ae.com/proto-buffers;studentpb";
+option go_package = "ae.com/studentpb-buffers;studentpb";
 
 message Student {
   string id = 1; // 1 is the position
   string name = 2; // 2 is the position
-  string int32 = 3;
+  int32 age = 3;
 }
 
 message GetStudentRequest {

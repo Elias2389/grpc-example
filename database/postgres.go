@@ -4,6 +4,7 @@ import (
 	"ae.com/proto-buffers/model"
 	"context"
 	"database/sql"
+	"fmt"
 	_ "github.com/lib/pq"
 	"log"
 )
@@ -12,16 +13,35 @@ type PostgresRepository struct {
 	db *sql.DB
 }
 
-func NewPostgresRepository(url string) (*PostgresRepository, error) {
-	db, err := sql.Open("postgres", url)
+const (
+	host     = "localhost"
+	port     = 5432
+	user     = "root"
+	password = "root"
+	dbname   = "test-grpc-db"
+)
+
+func NewPostgresRepository() (*PostgresRepository, error) {
+
+	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
+		"password=%s dbname=%s sslmode=disable",
+		host, port, user, password, dbname)
+
+	db, err := sql.Open("postgres", psqlInfo)
 	if err != nil {
-		return nil, err
+		panic(err)
 	}
+
+	err = db.Ping()
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println("You connected to your database.")
 
 	return &PostgresRepository{db: db}, nil
 }
 
-func (repo *PostgresRepository) SetStudent(ctx context.Context, student model.Student) error {
+func (repo *PostgresRepository) SetStudent(ctx context.Context, student *model.Student) error {
 	_, err := repo.db.ExecContext(
 		ctx,
 		"INSERT INTO students (id, name, age) VALUES ($1, $2, $3)",
@@ -55,6 +75,7 @@ func (repo *PostgresRepository) GetStudent(ctx context.Context, id string) (*mod
 	for rows.Next() {
 		err := rows.Scan(&student.Id, &student.Name, &student.Age)
 		if err != nil {
+			log.Println(err)
 			return nil, err
 		}
 		return &student, nil
