@@ -2,6 +2,8 @@ syntax = "proto3";
 
 package test;
 
+import "studentpb/student.proto";
+
 option go_package = "ae.com/testpb";
 
 message Test {
@@ -28,10 +30,26 @@ message SetQuestionResponse {
   bool ok = 1;
 }
 
+message EnrollmentRequest {
+  string student_id = 1;
+  string test_id = 2;
+}
+
+message GetStudentsPerTestRequest {
+  string test_id = 1;
+}
+
+message TakeTestRequest {
+  string answer = 1;
+}
+
 service TestService {
   rpc GetTest(GetTestRequest) returns (Test); //the name of the each rpc service have to be different of the message
   rpc SetTest(Test) returns (SetTestResponse);
   rpc SetQuestions(stream Question) returns (SetQuestionResponse);
+  rpc EnrollStudents(stream EnrollmentRequest) returns (SetQuestionResponse);
+  rpc GetStudentsPerTest(GetStudentsPerTestRequest) returns (stream student.Student);
+  rpc TakeTest(stream TakeTestRequest) returns (stream Question);
 }
 
-// protoc --go_out=. --go_opt=paths=source_relative --go-grpc_out=. --go-grpc_opt=paths=source_relative testpb/test.proto
+// protoc --go_out=. --go_opt=paths=source_relative --go-grpc_out=. --go-grpc_opt=paths=source_relative studentpb/student.proto
