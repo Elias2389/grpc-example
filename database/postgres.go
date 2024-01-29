@@ -123,3 +123,15 @@ func (repo *PostgresRepository) GetTest(ctx context.Context, id string) (*model.
 	}
 	return &test, nil
 }
+
+func (repo *PostgresRepository) SetQuestion(ctx context.Context, test *model.Question) error {
+	_, err := repo.db.ExecContext(
+		ctx,
+		"INSERT INTO questions (id, answer, question, test_id) VALUES ($1, $2, $3, $4)",
+		test.Id,
+		test.Answer,
+		test.Question,
+		test.TestId,
+	)
+	return err
+}
